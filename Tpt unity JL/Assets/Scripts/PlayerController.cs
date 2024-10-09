@@ -6,11 +6,14 @@ using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
+    public TMP_Text DoorText;
     public TMP_Text ScoreText;
     public TMP_Text WinText;
-    public GameObject Wall;
+    public GameObject Door;
     public int Score;
     public GameObject player;
+
+    private float doorTextDisplayTime = 3f; // Time in seconds to display the door text
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +21,7 @@ public class PlayerController : MonoBehaviour
         Score = 0;
         SetScoreText();
         WinText.text = "";
+        DoorText.text = "";
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -44,9 +48,10 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
             Score++;
             SetScoreText();
-            if (Score >= 5)
+            if (Score >= 9)
             {
-                Wall.gameObject.SetActive(false);
+                Door.gameObject.SetActive(false);
+                StartCoroutine(DisplayDoorText());
             }
         }
         if (other.gameObject.tag == "danger")
@@ -62,5 +67,12 @@ public class PlayerController : MonoBehaviour
         {
             WinText.text = "You Won! Press R to restart or ESC to quit game";
         }
+    }
+
+    IEnumerator DisplayDoorText()
+    {
+        DoorText.text = "Door Opened!";
+        yield return new WaitForSeconds(doorTextDisplayTime);
+        DoorText.text = "";
     }
 }
